@@ -42,6 +42,12 @@ int main(){
             /*command = "t" args: [date] */
             case 't':
                 command_t();
+            case 'r':
+                return 2;
+                //command_r();
+            case 'e':
+                return 1;
+                //command_e();
         }
     }
     return 0;
@@ -263,8 +269,7 @@ int verify_flight(Flight flight){
         return False;
     }
 
-    if(( i= Search_Flight_by_Code(flight.flightcode)) != -1
-    && FlightList[i].date.Day ==flight.date.Day){
+    if( Flight_exists(flight.flightcode,flight.date) != -1){
         printf(ERROR_FLIGHT_ALREADY_EXISTS);
         return False;
     }
@@ -310,20 +315,21 @@ int verify_flightcode(char code[]){
 }
 
 
-/*Gets a flight code and returns its index on the flight array
- or -1 if it doesnt exist */
-int Search_Flight_by_Code(char code[]){
-    int i,farray_i = -1;
+/*Gets a flight code and returns its index on the flight array if it exists
+ or -1 if it doesnt */
+int Flight_exists(char code[], Date date){
+    int i;
 
     for (i=0; i < flight_n; i++){
 
-        if (strcmp(code,FlightList[i].flightcode) == 0 ){
-            farray_i = i;
-            break;
+        if ( strcmp(code,FlightList[i].flightcode) == 0 &&
+         Date_Distance(date,FlightList[i].date) == 0){
+            return i;
         }
     }
-    return farray_i;
+    return NonExistant;
 }
+
 
 
 /* Helps verify_flight to verify all the conditions needed */
@@ -346,7 +352,7 @@ int Verify_Flight_aux(Flight flight){
         return False;
     }
 
-    if ( (capacity = flight.capacity) < MinCapacity || capacity > MaxCapacity){
+    if ( (capacity = flight.capacity) < MinCapacity){
         printf(ERROR_INVALID_CAPACITY);
         return False;
     }

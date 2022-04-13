@@ -1,8 +1,5 @@
 
 
-
-
-
 /*Constant assignment*/
 #define MaxID 4
 #define MaxCountry 31
@@ -14,10 +11,10 @@
 #define MaxFlightCodeNum 9
 #define MinFlightCodeNum 0
 #define MaxDuration 12
-#define MaxCapacity 100
 #define MinCapacity 10
 #define True 1
 #define False 0
+#define NonExistant -1
 #define Airport_Print "airport %s\n"
 
 
@@ -166,7 +163,7 @@ Date Changes_MonthYear(Date date1);
 DestFlight Copy_destflight_struct(int i);
 int Search_Airport_by_ID(char id[]);
 int Date_Distance(Date date1, Date date2);
-int Search_Flight_by_Code(char code[]);
+int Flight_exists(char code[], Date date);
 int time_distance(Time time1, Time time2);
 void Print_DepartFlight_info(Flight temp[],int i);
 void print_airport_info(char id[]);
