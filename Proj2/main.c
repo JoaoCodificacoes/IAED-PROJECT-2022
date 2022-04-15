@@ -78,6 +78,7 @@
 #define ERROR_TOO_MANY_RESERVATIONS "too many reservations\n"
 #define ERROR_RESERVATION_ALREADY_USED "%s: flight reservation already used\n"
 #define ERROR_NOT_FOUND "not found\n"
+#define ERROR_NO_MEMORY "no memory\n"
 
 
 
@@ -187,6 +188,8 @@ void print_airport_info(char id[]);
 Flight Scan_Flight_Info(Flight flight);
 int is30Days(int Month);
 FullDate sumtime_Date(Date date1, Time time1, Time time2);
+void release_all_mem(void);
+void check_mem(void *ptr);
 
 /*Verification Functions */
 int Flight_exists(char code[], Date date);
@@ -267,9 +270,9 @@ int main(){
                 command_e();
                 break;
         }
+
     }
-    remove_FlightList();
-    free(AirportList);
+    release_all_mem();
     return 0;
 }
 
@@ -927,7 +930,7 @@ void command_a(){
 
     scanf("%s %s %s",id,country,city);
     fgets(cityaux,MaxCity,stdin);
-    strncat(city,cityaux,MaxCity);
+    strcat(city,cityaux);
     city[strcspn(city, "\n")] = 0;
     make_airport(id,country,city);
 }
@@ -1087,12 +1090,17 @@ void command_r(){
     if ((c = getchar()) != '\n'){
         scanf("%s %d", buffer,&passengers);
         rCode = (char*)malloc(sizeof(char)*(strlen(buffer)+1));
+        check_mem(rCode);
         strcpy(rCode,buffer);
+
         if ((i = verify_reservation(rCode,passengers,FlightCode,date)) == NonExistant){
             free(rCode);
             return;
-        } 
+        }
+
         reservation = (Res*)malloc(sizeof(Res));
+        check_mem(reservation);
+
         reservation->passengers = passengers;
         reservation->rcode = rCode;
         reservation->next = NULL;
@@ -1120,7 +1128,9 @@ void command_e(){
     scanf("%s",buffer);
     len = strlen(buffer);
     Code = (char*)malloc(sizeof(char)*(len+1));
+    check_mem(Code);
     strcpy(Code,buffer);
+
     if (len < MinRCode){
         remove_flight(Code);
         free(Code);
@@ -1160,4 +1170,18 @@ void FindandFreeRes(char* Code){
         }
     }
     printf(ERROR_NOT_FOUND);
+}
+
+
+void check_mem(void *ptr){
+    if (ptr) return;
+    release_all_mem();
+    printf(ERROR_NO_MEMORY);
+    exit(0);
+}
+
+void release_all_mem(){
+    remove_FlightList();
+    free(AirportList);
+    return;
 }
