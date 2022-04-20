@@ -11,54 +11,43 @@
 #include <string.h>
 
 /*Constant assignment*/
-#define MaxID 4
-#define MaxCountry 31
-#define MaxCity 51
-#define MaxAirports 40
-#define MaxFlights 30000
-#define MaxFLightCode 7
-#define MinFlightCode 3
-#define MaxFlightCodeNum 9
-#define MinFlightCodeNum 0
-#define MaxDuration 12
-#define MinCapacity 10
-#define MinRCode 10
-#define MaxRCode 65536
-#define True 1
-#define False 0
-#define NonExistant -1
-#define Airport_Print "airport %s\n"
-#define TABLE_SIZE 26153
+#define MAXID 4
+#define MAXCOUNTRY 31
+#define MAXCITY 51
+#define MAXAIRPORTS 40
+#define MAXFLIGHTS 30000
+#define MAXFLIGHTCODE 7
+#define MINFLIGHTCODE 3
+#define MAXFLIGHTCODENUM 9
+#define MINFLIGHTCODENUM 0
+#define MAXDURATION 12
+#define MINCAPACITY 10
+#define MINRCODE 10
+#define MAXRCODE 65536
+#define TRUE 1
+#define FALSE 0
+#define NONEXISTENT -1
+#define AIRPORTPRINT "airport %s\n"
+#define TABLESIZE 26153
 
 /*     Dates and Time      */
-#define DaysInYear 365
-#define minutesinHour 60
-#define Month31 31
-#define Month30 30
-#define Month28 28
-#define n_Months_30Days 4
-#define FirstDay 1
-#define FirstMonth 1
-#define FirstYear 2022
-#define minutesinDay 1440
-#define MonthsinYear 12
-#define JaninYear 31
-#define FebinYear 59
-#define MarinYear 90
-#define AprinYear 120
-#define MayinYear 151
-#define JuninYear 181
-#define JulinYear 212
-#define AuginYear 243
-#define SepinYear 273
-#define OctinYear 304
-#define NovinYear 334
-#define Feb 2
-#define Apr 4
-#define Jun 6
-#define Sep 9
-#define Nov 11
-#define Dec 12
+#define DAYSINYEAR 365
+#define MINUTESINHOUR 60
+#define MONTH31 31
+#define MONTH30 30
+#define MONTH28 28
+#define MOTHS30DAYSNUM 4
+#define FIRSTDAY 1
+#define FIRSTMONTH 1
+#define FIRSTYEAR 2022
+#define MINUTESINDAY 1440
+#define MONTHSINYEAR 12
+#define FEB 2
+#define APR 4
+#define JUN 6
+#define SEP 9
+#define NOV 11
+#define DEC 12
 
 
 /*                     ERRORS                                */
@@ -78,17 +67,17 @@
 #define ERROR_TOO_MANY_RESERVATIONS "too many reservations\n"
 #define ERROR_RESERVATION_ALREADY_USED "%s: flight reservation already used\n"
 #define ERROR_NOT_FOUND "not found\n"
-#define ERROR_NO_MEMORY "no memory\n"
+#define ERROR_NO_MEMORY "No memory\n"
 
 
 
 /*Data Structures Definition*/
 typedef struct{
 
-    char id[MaxID];
-    char city[MaxCity];
-    char country[MaxCountry];
-    int  flights;
+    char id[MAXID];
+    char city[MAXCITY];
+    char country[MAXCOUNTRY];
+    int  airportFlights;
 
 }Airport; 
 
@@ -102,9 +91,9 @@ typedef struct{
 
 typedef struct{
 
-    int Day;
-    int Month;
-    int Year;
+    int day;
+    int month;
+    int year;
 
 }Date;
 
@@ -118,44 +107,44 @@ typedef struct{
 
 typedef struct{
 
-    char flightcode[MaxFLightCode];
-    char departid[MaxID];
+    char flightCode[MAXFLIGHTCODE];
+    char departId[MAXID];
     Date date;
     Time time;
 
 }DestFlight;
 
-struct res_list{
-    char* rcode;
+struct resList{
+    char* rCode;
     int passengers;
-    struct res_list* next;
-    struct res_list* prev;
+    struct resList* next;
+    struct resList* prev;
 };
 
-typedef struct res_list Res_List;
+typedef struct resList ResList;
 
 
 typedef struct{
 
-    char flightcode[MaxFLightCode];
-    char departid[MaxID];
-    char destid[MaxID];
+    char flightCode[MAXFLIGHTCODE];
+    char departId[MAXID];
+    char destid[MAXID];
     Date date;
     Time time;
     Time duration;
     int capacity;
-    Res_List* reservation;
-    int reservation_n;
+    ResList* reservation;
+    int resNum;
 
 }Flight;
 
-struct res_hash{
-    Res_List* res_in_list;
+struct resHash{
+    ResList* resInList;
     Flight* flight;
-    struct res_hash* next;
+    struct resHash* next;
 };
 
-typedef struct res_hash Res_Hash;
+typedef struct resHash ResHash;
 
 
 
@@ -163,84 +152,84 @@ typedef struct res_hash Res_Hash;
 
 /* Commands */
 
-void command_a(void);
-void command_l(void);
-void command_v(void);
-void command_p(void);
-void command_t(void);
-void command_c(void);
-void command_r(void);
-void command_e(void);
+void addAirport(void);
+void listAirports(void);
+void addListFlights(void);
+void listFlightsDepart(void);
+void changeDate(void);
+void listFlightsArrival(void);
+void addReservation(void);
+void delReservationsFlights(void);
 
 /* Make Structures */
 
-void make_airport(char id[], char country[], char city[]);
-void make_flight(Flight flight);
+void makeAirport(char id[], char country[], char city[]);
+void makeFlight(Flight flight);
 
 /*Sorting*/
 
-void sort_flights(Flight farray[], int flight_n);
-void sort_airports(void);
-void sort_destflights(DestFlight farray[], int flight_n);
+void sortFlights(Flight fArray[], int flightNum);
+void sortAirports(void);
+void sortDestFlights(DestFlight fArray[], int flightNum);
 
 /*Auxiliary Functions*/
 
-int is_upper_str(char str[]);
-int Months_in_days(int Months);
-int sum_minutes(Time time1, Time time2);
-Date Changes_MonthYear(Date date1);
-DestFlight Copy_destflight_struct(int i);
-int Search_Airport_by_ID(char id[]);
-int Date_Distance(Date date1, Date date2);
-int time_distance(Time time1, Time time2);
-void Print_DepartFlight_info(Flight temp[],int i);
-void print_airport_info(char id[]);
-Flight Scan_Flight_Info(Flight flight);
-int is30Days(int Month);
-FullDate sumtime_Date(Date date1, Time time1, Time time2);
-void release_all_mem(void);
-void check_mem(void *ptr);
-void remove_res(Res_List* res,Flight* flight);
-void remove_reservations(int i);
-void remove_FlightList(void);
+int isUpperStr(char str[]);
+int monthsToDays(int month);
+int sumMinutes(Time time1, Time time2);
+Date changesMonthYear(Date date1);
+DestFlight copyDestFlight(int i);
+int searchAirport(char id[]);
+int dateDistance(Date date1, Date date2);
+int timeDistance(Time time1, Time time2);
+void printDepartFlight(Flight temp[],int i);
+void printAirportInfo(char id[]);
+Flight scanFlightInfo(Flight flight);
+int is30Days(int month);
+FullDate sumTimeDate(Date date1, Time time1, Time time2);
+void releaseAllMem(void);
+void checkMem(void *ptr);
+void removeRes(ResList* res,Flight* flight);
+void removeReservations(int i);
+void removeAllFlights(void);
 
 /*Verification Functions */
-int Flight_exists(char code[], Date date);
-int verify_airport(char id[]);
-int verify_flight(Flight flight);
-int Verify_Flight_aux(Flight flight);
-int verify_flightcode(char code[]);
-int Airport_exists(char id[]);
-int verify_reservationCode(char* str);
-int verify_reservation(char* rCode,int p,char FlightCode[MaxFLightCode], Date date);
-Res_List *Insert_Reservation(Res_List* res, Flight* flight);
-int VerifyFlightCodeandDate(char* FlightCode, Date date);
-void Print_Reservations(int i);
-int verify_reservation_n(int p , int i);
-void remove_res_list(Res_List* res, Flight* flight);
-unsigned int hash_func(char* key);
-void res_delete(char *rCode,int mode);
-Res_Hash *hash_search(char* rCode);
-void hash_insert(Res_Hash *res);
-void remove_flights(char* Code);
+int existsFlight(char code[], Date date);
+int verifyAirport(char id[]);
+int verifyFlight(Flight flight);
+int verifyFlightAux(Flight flight);
+int verifyflightCode(char code[]);
+int existsAirport(char id[]);
+int verifyResCode(char* str);
+int verifyRes(char* rCode,int p,char flightCode[MAXFLIGHTCODE], Date date);
+ResList *insertRes(ResList* res, Flight* flight);
+int verifyDateFlight(char* flightCode, Date date);
+void printReservations(int i);
+int verifyResNum(int p , int i);
+void removeResInList(ResList* res, Flight* flight);
+unsigned int hashFunc(char* key);
+void resDelete(char *rCode,int mode);
+ResHash *hashSearch(char* rCode);
+void hashInsert(ResHash *res);
+void removeFlights(char* Code);
 
 
 
-Res_Hash **hash_table;
+ResHash **hashRes;
 /* List with all airports */
-Airport *AirportList;
+Airport *airports;
 
 /* List with all flights */
-Flight *FlightList;
+Flight *flights;
 
 /* Number of airports */
-int airport_n = 0;
+int numAirports = 0;
 
 /* Number of Flights */
-int flight_n = 0;
+int numFlights = 0;
 
 /* Current Date */
-Date Today = {FirstDay, FirstMonth, FirstYear};
+Date today = {FIRSTDAY, FIRSTMONTH, FIRSTYEAR};
 
 
 
@@ -248,47 +237,47 @@ Date Today = {FirstDay, FirstMonth, FirstYear};
 int main(){
     char command;
 
-    FlightList = (Flight*)calloc(MaxFlights,sizeof(Flight));
-    AirportList = (Airport*)calloc(MaxAirports,sizeof(Airport));
-    hash_table = (Res_Hash**)calloc(TABLE_SIZE,sizeof(Res_Hash*));
+    flights = (Flight*)calloc(MAXFLIGHTS,sizeof(Flight));
+    airports = (Airport*)calloc(MAXAIRPORTS,sizeof(Airport));
+    hashRes = (ResHash**)calloc(TABLESIZE,sizeof(ResHash*));
 
     while((command = getchar()) != 'q'){
         switch(command){
              /* command = "a" args: [AiportID] [Country] [City] */
             case 'a':
-                command_a();
+                addAirport();
                 break;
             /*command = "p" args: Optional, [AiportID]...[AirportID] */
             case 'l': 
-                command_l();
+                listAirports();
                 break;
-            /*command = "v" args: Optional,[FlightCode] [DepartID] [ArrivalID]
+            /*command = "v" args: Optional,[flightCode] [departId] [ArrivalID]
             [Departure Date] [Departure Time] [Duration] [Capacity] */
             case 'v':
-                command_v();
+                addListFlights();
                 break;
             /*command = "p" args: Optional, [AiportID]*/
             case 'p':
-                command_p();
+                listFlightsDepart();
                 break;
             /*command = "c" args: Optional, [AiportID]*/
             case 'c':
-                command_c();
+                listFlightsArrival();
                 break;
             /*command = "t" args: [date] */
             case 't':
-                command_t();
+                changeDate();
                 break;
             case 'r':
-                command_r();
+                addReservation();
                 break;      
             case 'e':
-                command_e();
+                delReservationsFlights();
                 break;
         }
 
     }
-    release_all_mem();
+    releaseAllMem();
     return 0;
 }
 
@@ -296,19 +285,19 @@ int main(){
 
 /*Gets a flight array and sorts its from the oldest date
 and time to the most recent one */
-void sort_flights(Flight farray[],int f_n){
+void sortFlights(Flight fArray[],int FlightsToSort){
     int i,j,days;
     Flight aux;
-    for (i=0; i < f_n-1; i++){
+    for (i=0; i < FlightsToSort-1; i++){
 
-        for (j=i+1; j < f_n; j++){
+        for (j=i+1; j < FlightsToSort; j++){
 
-            if ( (days = Date_Distance(farray[i].date,farray[j].date))<0
+            if ( (days = dateDistance(fArray[i].date,fArray[j].date))<0
             || ( (days == 0)
-            && (time_distance(farray[i].time,farray[j].time)) < 0) ){
-                aux = farray[i];
-                farray[i] = farray[j];
-                farray[j] = aux;
+            && (timeDistance(fArray[i].time,fArray[j].time)) < 0) ){
+                aux = fArray[i];
+                fArray[i] = fArray[j];
+                fArray[j] = aux;
             }
         }
     }
@@ -318,20 +307,20 @@ void sort_flights(Flight farray[],int f_n){
 
 /*Gets a destination flights array and sorts its from
  the oldest date and time to the most recent one */
-void sort_destflights(DestFlight farray[], int desflight_n){
+void sortDestFlights(DestFlight fArray[], int FlightsToSort){
     int i,j,days;
     DestFlight aux;
 
-    for (i=0; i< desflight_n-1; i++){
+    for (i=0; i< FlightsToSort-1; i++){
 
-        for (j=i+1; j < desflight_n; j++){
+        for (j=i+1; j < FlightsToSort; j++){
 
-            if ( (days = Date_Distance(farray[i].date,farray[j].date)) < 0
-            || (days == 0 && time_distance(farray[i].time,farray[j].time) < 0)){
+            if ( (days = dateDistance(fArray[i].date,fArray[j].date)) < 0
+            || (days == 0 && timeDistance(fArray[i].time,fArray[j].time) < 0)){
 
-                aux = farray[i];
-                farray[i] = farray[j];
-                farray[j] = aux;
+                aux = fArray[i];
+                fArray[i] = fArray[j];
+                fArray[j] = aux;
             }
         }
     }
@@ -343,196 +332,196 @@ void sort_destflights(DestFlight farray[], int desflight_n){
 
 
 /* Verifies if the airport is valid */ 
-int verify_airport(char id[]){
-    if ( !(is_upper_str(id)) ){
+int verifyAirport(char id[]){
+    if ( !(isUpperStr(id)) ){
         printf(ERROR_INVALID_AIRPORT);
-        return False;
+        return FALSE;
     }
 
-    if (airport_n == MaxAirports){
+    if (numAirports == MAXAIRPORTS){
         printf(ERROR_TOO_MANY_AIRPORTS);
-        return False;
+        return FALSE;
     }
 
-    if (Search_Airport_by_ID(id) != -1){
+    if ( searchAirport(id) != NONEXISTENT) {
         printf(ERROR_DUPLICATE_AIRPORT);
-        return False;
+        return FALSE;
     }
-    return True;
+    return TRUE;
 }
 
 
 /*Verifies if the entire string is in uppercase */
-int is_upper_str(char str[]){
+int isUpperStr(char str[]){
     size_t i;
         for (i=0; i < strlen(str); i++ ){
             if ( !(isupper(str[i])) ){
-               return False;
+               return FALSE;
             }
         }
-    return True;
+    return TRUE;
 }
 
 
 /* Gets and airport array and a airport id  and verifies if the airport exists*/
-int Airport_exists(char id[]){
-    if (Search_Airport_by_ID(id) == -1){
+int existsAirport(char id[]){
+    if (searchAirport(id) == NONEXISTENT){
         printf(ERROR_NO_SUCH_AIRPORT_ID,id);
-        return False;
+        return FALSE;
     }
-    return True;
+    return TRUE;
 }
 
 
 
 /*Gets a temporary flight,and the current date
 and verifies if the temporary flight is valid */
-int verify_flight(Flight flight){
-    if (!(verify_flightcode(flight.flightcode))){
+int verifyFlight(Flight flight){
+    if (!(verifyflightCode(flight.flightCode))){
         printf(ERROR_INVALID_FLIGHT_CODE);
-        return False;
+        return FALSE;
     }
 
-    if( Flight_exists(flight.flightcode,flight.date) != -1){
+    if( existsFlight(flight.flightCode,flight.date) != NONEXISTENT){
         printf(ERROR_FLIGHT_ALREADY_EXISTS);
-        return False;
+        return FALSE;
     }
 
-    if (!Airport_exists(flight.departid) || !Airport_exists(flight.destid) ){
-        return False;
+    if (!existsAirport(flight.departId) || !existsAirport(flight.destid) ){
+        return FALSE;
     }
 
-    if ( !Verify_Flight_aux(flight)){
-        return False;
+    if ( !verifyFlightAux(flight)){
+        return FALSE;
     }
 
-    return True;
+    return TRUE;
 }
 
 
-/* Helps verify_flight to verify all the conditions needed */
-int Verify_Flight_aux(Flight flight){
-    int days,duration_hour;
+/* Helps verifyFlight to verify all the conditions needed */
+int verifyFlightAux(Flight flight){
+    int days,hourDuration;
 
-    if (flight_n == MaxFlights){
+    if (numFlights == MAXFLIGHTS){
         printf(ERROR_TOO_MANY_FLIGHTS);
-        return False;
+        return FALSE;
     }
 
-    if ( (days = Date_Distance(Today,flight.date)) < 0 || days > DaysInYear){
+    if ( (days = dateDistance(today,flight.date)) < 0 || days > DAYSINYEAR){
         printf(ERROR_INVALID_DATE);
-        return False;
+        return FALSE;
     }
 
-    if ((duration_hour=flight.duration.hour) > MaxDuration 
-    || ((duration_hour == MaxDuration) && flight.duration.minute > 0  )){
+    if ((hourDuration=flight.duration.hour) > MAXDURATION 
+    || ((hourDuration == MAXDURATION) && flight.duration.minute > 0  )){
         printf(ERROR_INVALID_DURATION);
-        return False;
+        return FALSE;
     }
 
-    if ( flight.capacity < MinCapacity){
+    if ( flight.capacity < MINCAPACITY){
         printf(ERROR_INVALID_CAPACITY);
-        return False;
+        return FALSE;
     }
 
-    return True;
+    return TRUE;
 }
 
 
-/* Gets a flightcode and verifies if the code is valid */
-int verify_flightcode(char code[]){
+/* Gets a flightCode and verifies if the code is valid */
+int verifyflightCode(char code[]){
     int i,len;
     len = strlen(code);
 
-    if (len < MinFlightCode){
-        return False;
+    if (len < MINFLIGHTCODE){
+        return FALSE;
     }
 
     if ( (!isalpha(code[0])) || (!isalpha(code[1])) 
     || (!isupper(code[0])) || (!isupper(code[1])) ){
-        return False;
+        return FALSE;
     }
     
     if ( (code[2] - '0') < 1){
-        return False;   
+        return FALSE;   
     }
 
     for (i = 2; i < len; i++){
 
-        if( ((code[i]- '0') < MinFlightCodeNum)
-        ||  (code[i]- '0') > MaxFlightCodeNum){
-            return False;
+        if( ((code[i]- '0') < MINFLIGHTCODENUM)
+        ||  (code[i]- '0') > MAXFLIGHTCODENUM){
+            return FALSE;
         }
     }
-    return True;
+    return TRUE;
 }
 
 
 
 /*Gets a flight code and returns its index on the flight array if it exists
  or -1 if it doesnt */
-int Flight_exists(char* code, Date date){
+int existsFlight(char* code, Date date){
     int i;
 
-    for (i=0; i < flight_n; i++){
+    for (i=0; i < numFlights; i++){
 
-        if ( strcmp(code,FlightList[i].flightcode) == 0 &&
-         Date_Distance(date,FlightList[i].date) == 0){
+        if ( strcmp(code,flights[i].flightCode) == 0 &&
+         dateDistance(date,flights[i].date) == 0){
             return i;
         }
     }
-    return NonExistant;
+    return NONEXISTENT;
 }
 
 
 
 
-int verify_reservation(char* rCode,int p,char* FlightCode, Date date){
+int verifyRes(char* rCode,int p,char* flightCode, Date date){
     int i,d;
 
-    if (!verify_reservationCode(rCode)){
+    if (!verifyResCode(rCode)){
         printf(ERROR_INVALID_RESERVATION_CODE);
-        return NonExistant;
+        return NONEXISTENT;
     }
      
-    if ( (i = Flight_exists(FlightCode,date)) == NonExistant){
-        printf(ERROR_FLIGHT_DOES_NOT_EXIST,FlightCode);
-        return NonExistant;
+    if ( (i = existsFlight(flightCode,date)) == NONEXISTENT){
+        printf(ERROR_FLIGHT_DOES_NOT_EXIST,flightCode);
+        return NONEXISTENT;
     }
 
-    if (hash_search(rCode) ){
+    if (hashSearch(rCode) ){
         printf(ERROR_RESERVATION_ALREADY_USED,rCode);
-        return NonExistant;
+        return NONEXISTENT;
     }
-    if (!verify_reservation_n(p,i)){
+    if (!verifyResNum(p,i)){
         printf(ERROR_TOO_MANY_RESERVATIONS);
-        return NonExistant;
+        return NONEXISTENT;
     }
-    if ( (d =Date_Distance(Today,date)) <0 || d > DaysInYear){
+    if ( (d =dateDistance(today,date)) <0 || d > DAYSINYEAR){
         printf(ERROR_INVALID_DATE);
-        return NonExistant;
+        return NONEXISTENT;
     }
 
     if ( p <= 0){
         printf(ERROR_INVALID_PASSENGER_NUMBER);
-        return NonExistant;
+        return NONEXISTENT;
     }
 
     return i;
 }
 
 
-int VerifyFlightCodeandDate(char* FlightCode, Date date){
+int verifyDateFlight(char* flightCode, Date date){
     int i,d;
-    if ( (i = Flight_exists(FlightCode,date)) == NonExistant){
-        printf(ERROR_FLIGHT_DOES_NOT_EXIST,FlightCode);
-        return NonExistant;
+    if ( (i = existsFlight(flightCode,date)) == NONEXISTENT){
+        printf(ERROR_FLIGHT_DOES_NOT_EXIST,flightCode);
+        return NONEXISTENT;
     }
 
 
-    if ( (d =Date_Distance(Today,date)) <0 || d > DaysInYear){
+    if ( (d =dateDistance(today,date)) <0 || d > DAYSINYEAR){
         printf(ERROR_INVALID_DATE);
-        return NonExistant;
+        return NONEXISTENT;
     }
     return i;
 }
@@ -540,55 +529,55 @@ int VerifyFlightCodeandDate(char* FlightCode, Date date){
 
 
 
-int verify_reservationCode(char* str){
+int verifyResCode(char* str){
     int i=0;
     while (str[i]){
         if ( !isdigit(str[i])  ){
             if ( !isalpha(str[i]) ){
-                return False;
+                return FALSE;
             }
             if ( !isupper(str[i]) ){
-                return False;
+                return FALSE;
             }
         }
         i += 1;
     }
     if (i < 10){
-        return False;
+        return FALSE;
     }
-    return True;
+    return TRUE;
 }
 
 
 /* Gets two dates and calculates how far apart they are in days */
-int Date_Distance(Date date1, Date date2){
+int dateDistance(Date date1, Date date2){
     int days,days1,days2;
 
-    days1 = (date1.Year)*DaysInYear + date1.Day + Months_in_days(date1.Month-1);
-    days2 = (date2.Year)*DaysInYear + date2.Day + Months_in_days(date2.Month-1);
+    days1 = (date1.year)*DAYSINYEAR + date1.day + monthsToDays(date1.month-1);
+    days2 = (date2.year)*DAYSINYEAR + date2.day + monthsToDays(date2.month-1);
     days = days2-days1;
     return days;
 }
 
 
 /*Gets two times and calculates how far apart they are in minutes */
-int time_distance(Time time1, Time time2 ){
+int timeDistance(Time time1, Time time2 ){
     int time;
 
-    time = time2.hour*minutesinHour + time2.minute -
-    (time1.hour*minutesinHour + time1.minute);
+    time = time2.hour*MINUTESINHOUR + time2.minute -
+    (time1.hour*MINUTESINHOUR + time1.minute);
     return time;
 }
 
 
 /* Gets an array, and an index an prints the flight information
  of its corresponding flight */
-void Print_DepartFlight_info(Flight temp[],int i){
+void printDepartFlight(Flight temp[],int i){
 
-    printf("%s %s ",temp[i].flightcode, temp[i].destid);
+    printf("%s %s ",temp[i].flightCode, temp[i].destid);
 
-    printf("%02d-%02d-%d ",temp[i].date.Day, temp[i].date.Month,
-    temp[i].date.Year);
+    printf("%02d-%02d-%d ",temp[i].date.day, temp[i].date.month,
+    temp[i].date.year);
 
     printf("%02d:%02d\n",temp[i].time.hour, temp[i].time.minute);
 
@@ -607,12 +596,12 @@ void Print_DepartFlight_info(Flight temp[],int i){
 
 
 /*Scans information and fills the flight structure with it*/
-Flight Scan_Flight_Info(Flight tempflight){
-    scanf("%s %s %s", tempflight.flightcode, tempflight.departid,
+Flight scanFlightInfo(Flight tempflight){
+    scanf("%s %s %s", tempflight.flightCode, tempflight.departId,
     tempflight.destid);
 
-    scanf("%d-%d-%d", &tempflight.date.Day, &tempflight.date.Month,
-    &tempflight.date.Year);
+    scanf("%d-%d-%d", &tempflight.date.day, &tempflight.date.month,
+    &tempflight.date.year);
 
     scanf("%d:%d", &tempflight.time.hour, &tempflight.time.minute);
 
@@ -625,18 +614,18 @@ Flight Scan_Flight_Info(Flight tempflight){
 
 /* Gets a temporary flight and the current date
 and inserts the flight into the flight array and adds it to the depart airport*/
-void make_flight(Flight flight){
-    int airport_i;
+void makeFlight(Flight flight){
+    int airportIndex;
 
-    if ( !(verify_flight(flight)) ){
+    if ( !(verifyFlight(flight)) ){
         return;
     }
     flight.reservation = NULL;
-    flight.reservation_n = 0;
-    airport_i = Search_Airport_by_ID(flight.departid);
-    AirportList[airport_i].flights += 1;
-    FlightList[flight_n] = flight;
-    flight_n +=1;
+    flight.resNum = 0;
+    airportIndex = searchAirport(flight.departId);
+    airports[airportIndex].airportFlights += 1;
+    flights[numFlights] = flight;
+    numFlights +=1;
     return ;
 }
 
@@ -647,31 +636,31 @@ void make_flight(Flight flight){
 /*Gets an airport ID and an airport array
 and returns its index on the airport array or -1 if it doesnt exist*/
 
-int Search_Airport_by_ID(char id[]){
-    int i,aarray_i = -1;
-    for (i=0; i < airport_n; i++){
-        if (strcmp(id,AirportList[i].id) == 0 ){
-            aarray_i = i;
+int searchAirport(char id[]){
+    int i,airportIndex = -1;
+    for (i=0; i < numAirports; i++){
+        if (strcmp(id,airports[i].id) == 0 ){
+            airportIndex = i;
             break;
         }
     }
-    return aarray_i;
+    return airportIndex;
 }
 
 
 
 /*Sorts the airport system by ID alphabetically */
-void sort_airports(){
+void sortAirports(){
     int j,i;
     Airport aux;
-    for (i=0; i < airport_n-1; i++){
+    for (i=0; i < numAirports-1; i++){
 
-        for (j= i+1; j < (airport_n);j++){
+        for (j= i+1; j < (numAirports);j++){
 
-            if ( strcmp(AirportList[i].id, AirportList[j].id) > 0){
-                aux = AirportList[i];
-                AirportList[i] = AirportList[j];
-                AirportList[j] = aux;
+            if ( strcmp(airports[i].id, airports[j].id) > 0){
+                aux = airports[i];
+                airports[i] = airports[j];
+                airports[j] = aux;
             }
         }
     }
@@ -679,46 +668,46 @@ void sort_airports(){
 
 
 /* Gets an airport id and prints its city country and flights */
-void print_airport_info(char id[]){
+void printAirportInfo(char id[]){
     int i;
-    if ((i = Search_Airport_by_ID(id)) == -1){
+    if ((i = searchAirport(id)) == NONEXISTENT){
 
         printf(ERROR_NO_SUCH_AIRPORT_ID,id);
         return;
     }
-    printf("%s %s %s %d\n", id, AirportList[i].city, AirportList[i].country,
-     AirportList[i].flights);
+    printf("%s %s %s %d\n", id, airports[i].city, airports[i].country,
+     airports[i].airportFlights);
 }
 
 
 /* Makes an airport structure and inserts it into an airport array */
-void make_airport(char id[], char country[], char city[]){
+void makeAirport(char id[], char country[], char city[]){
     Airport airport;
-    if ( !(verify_airport(id)) ){
+    if ( !(verifyAirport(id)) ){
         return;
     }
     strcpy(airport.id,id);
     strcpy(airport.country,country);
     strcpy(airport.city,city);
-    airport.flights = 0;
-    AirportList[airport_n] = airport;
-    printf(Airport_Print,id);
-    airport_n +=1;
+    airport.airportFlights = 0;
+    airports[numAirports] = airport;
+    printf(AIRPORTPRINT,id);
+    numAirports +=1;
     return;
 }
 
 
 /*Gets an index and returns a copy of the flight
 on that index on the flight array */
-DestFlight Copy_destflight_struct(int i){
+DestFlight copyDestFlight(int i){
     DestFlight destflight;
     FullDate fulldate;
 
-    strcpy(destflight.departid,FlightList[i].departid);
-    strcpy(destflight.flightcode,FlightList[i].flightcode);
+    strcpy(destflight.departId,flights[i].departId);
+    strcpy(destflight.flightCode,flights[i].flightCode);
 
     fulldate = 
-    sumtime_Date(FlightList[i].date, FlightList[i].time,FlightList[i].duration);
+    sumTimeDate(flights[i].date, flights[i].time,flights[i].duration);
 
     destflight.date = fulldate.date;
     destflight.time = fulldate.time;
@@ -728,13 +717,13 @@ DestFlight Copy_destflight_struct(int i){
 
 /* Gets a date and two times and adds the sum of the times to the date
 returns the new date and time */
-FullDate sumtime_Date(Date date1, Time time1, Time time2){
+FullDate sumTimeDate(Date date1, Time time1, Time time2){
     FullDate fulldate;
-    int sum = sum_minutes(time1,time2);
+    int sum = sumMinutes(time1,time2);
     
-    if (sum >= minutesinDay){
-        date1 = Changes_MonthYear(date1);
-        sum -= minutesinDay;
+    if (sum >= MINUTESINDAY){
+        date1 = changesMonthYear(date1);
+        sum -= MINUTESINDAY;
     }
 
     time1.hour = sum / 60;
@@ -746,11 +735,11 @@ FullDate sumtime_Date(Date date1, Time time1, Time time2){
 
 
 /* Gets two time structures and returns their sum in minutes */
-int sum_minutes(Time time1, Time time2){
+int sumMinutes(Time time1, Time time2){
     int min1,min2,sum;
 
-    min2 = time2.hour*minutesinHour + time2.minute;
-    min1 = time1.hour*minutesinHour + time1.minute;
+    min2 = time2.hour*MINUTESINHOUR + time2.minute;
+    min1 = time1.hour*MINUTESINHOUR + time1.minute;
     sum = min1 +min2;
     return sum;
 }
@@ -758,67 +747,66 @@ int sum_minutes(Time time1, Time time2){
 
 /* Verifies if the Month or year will change after
  the addition of the time to the date */
-Date Changes_MonthYear(Date date1){
+Date changesMonthYear(Date date1){
 
-        if  (date1.Month == Feb && date1.Day == (Month28)){
-            date1.Day = 0;
-            date1.Month +=1;
+        if  (date1.month == FEB && date1.day == (MONTH28)){
+            date1.day = 0;
+            date1.month +=1;
         }
 
-        else if (is30Days(date1.Month) && (date1.Day == Month30)){
-            date1.Day = 0;
-            date1.Month +=1;
+        else if (is30Days(date1.month) && (date1.day == MONTH30)){
+            date1.day = 0;
+            date1.month +=1;
         }
 
-        else if (!(is30Days(date1.Month))  && (date1.Day == Month31)){
-            date1.Day = 0;
+        else if (!(is30Days(date1.month))  && (date1.day == MONTH31)){
+            date1.day = 0;
 
-            if (date1.Month == Dec){
-                date1.Year +=1;
-                date1.Month = 0;
+            if (date1.month == DEC){
+                date1.year +=1;
+                date1.month = 0;
             }
 
-            date1.Month +=1;
+            date1.month +=1;
         }
 
-        date1.Day +=1;
+        date1.day +=1;
 
     return date1;
 }
 
 
 /*Verifies if a month has 30 days*/
-int is30Days(int Month){
+int is30Days(int month){
     int i;
-    const int Months[n_Months_30Days] = {Apr,Jun,Sep,Nov};
+    const int months[MOTHS30DAYSNUM] = {APR,JUN,SEP,NOV};
     
-    for (i=0; i < n_Months_30Days; i++){
+    for (i=0; i < MOTHS30DAYSNUM; i++){
 
-        if (Month == Months[i]){
-            return True;
+        if (month == months[i]){
+            return TRUE;
         }
     }
-    return False;
+    return FALSE;
 }
 
 
 /* Gets a month a calculates how many days have passed
 since the start of the year */
-int Months_in_days(int Months){
+int monthsToDays(int month){
     int days = 0;
     
-    const int monthsdays[MonthsinYear] = 
-    {0,JaninYear,FebinYear,MarinYear,AprinYear,MayinYear,JuninYear
-    ,JulinYear,AuginYear,SepinYear,OctinYear,NovinYear};
+    const int monthsdays[MONTHSINYEAR] = 
+    { 0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334 };
 
 
-    days = monthsdays[Months];
+    days = monthsdays[month];
     
     return days;
 }
 
-Res_List* Insert_Reservation(Res_List* res,Flight* flight){
-    Res_List *temp;
+ResList* insertRes(ResList* res,Flight* flight){
+    ResList *temp;
     temp = flight->reservation;
     /*             Insert When List Is Empty          */
     if (!temp){
@@ -826,7 +814,7 @@ Res_List* Insert_Reservation(Res_List* res,Flight* flight){
         return res;
     }
      /*             Insert at Top         */
-    if (strcmp(res->rcode,temp->rcode) < 0){
+    if (strcmp(res->rCode,temp->rCode) < 0){
         res->next = temp;
         res->prev = NULL;
         temp->prev = res;
@@ -834,7 +822,7 @@ Res_List* Insert_Reservation(Res_List* res,Flight* flight){
         return res;
     }
 
-    while ( temp->next  && strcmp(res->rcode,temp->next->rcode) > 0){
+    while ( temp->next  && strcmp(res->rCode,temp->next->rCode) > 0){
         temp = temp->next;
     }
     res->next = temp->next;
@@ -848,22 +836,22 @@ Res_List* Insert_Reservation(Res_List* res,Flight* flight){
     return res;
 }
 
-void Print_Reservations(int i){
-    Res_List* temp;
-    temp = FlightList[i].reservation;
+void printReservations(int i){
+    ResList* temp;
+    temp = flights[i].reservation;
     while (temp != NULL){
-        printf("%s %d\n",temp->rcode, temp->passengers);
+        printf("%s %d\n",temp->rCode, temp->passengers);
         temp = temp->next;
     }
 
 }
 
 
-int verify_reservation_n(int p , int i){
-    if ( (FlightList[i].reservation_n + p) > FlightList[i].capacity){
-        return False;
+int verifyResNum(int p , int i){
+    if ( (flights[i].resNum + p) > flights[i].capacity){
+        return FALSE;
     }
-    return True;
+    return TRUE;
 }
 
 
@@ -880,28 +868,28 @@ int verify_reservation_n(int p , int i){
 
 
 /* Makes an airport with the arguments read */
-void command_a(){
-    char id[MaxID],country[MaxCountry],city[MaxCity],cityaux[MaxCity];
+void addAirport(){
+    char id[MAXID],country[MAXCOUNTRY],city[MAXCITY],cityaux[MAXCITY];
 
     scanf("%3s %30s %s",id,country,city);
-    fgets(cityaux,MaxCity,stdin);
+    fgets(cityaux,MAXCITY,stdin);
     strcat(city,cityaux);
     city[strcspn(city, "\n")] = 0;
-    make_airport(id,country,city);
+    makeAirport(id,country,city);
 }
 
 
 /*Scans to see if the command "l" has arguments, and either lists all airports
 by alphabetical order if it doesnt have arguments
 or lists the asked ones by the order asked */
-void command_l(){
-    char id[MaxID], c;
+void listAirports(){
+    char id[MAXID], c;
     int i;
     if ((c=getchar()) == '\n'){
-        sort_airports();
-        for ( i = 0; i < airport_n; i++){
-            printf("%s %s %s %d\n",AirportList[i].id, AirportList[i].city,
-            AirportList[i].country, AirportList[i].flights);
+        sortAirports();
+        for ( i = 0; i < numAirports; i++){
+            printf("%s %s %s %d\n",airports[i].id, airports[i].city,
+            airports[i].country, airports[i].airportFlights);
         }
     }
 
@@ -910,7 +898,7 @@ void command_l(){
             scanf("%s",id);
             c =getchar();
 
-            print_airport_info(id);
+            printAirportInfo(id);
         }
     }
 }
@@ -918,93 +906,95 @@ void command_l(){
 
 /*Scans to see if the command "v" has arguments, if there are arguments
 makes a flight if not prints existing flights by creation order */
-void command_v(){
+void addListFlights(){
     int i;
     Flight tempflight;
     /*Prints by creation order */
     if (getchar() == '\n'){
-        for (i =0; i<flight_n; i++){
+        for (i =0; i<numFlights; i++){
 
-            printf("%s %s %s ", FlightList[i].flightcode, FlightList[i].departid
-            , FlightList[i].destid);
+            printf("%s %s %s ", flights[i].flightCode, flights[i].departId
+            , flights[i].destid);
 
-            printf("%02d-%02d-%d ",FlightList[i].date.Day,
-             FlightList[i].date.Month, FlightList[i].date.Year);
+            printf("%02d-%02d-%d ",flights[i].date.day,
+             flights[i].date.month, flights[i].date.year);
 
-            printf("%02d:%02d\n",FlightList[i].time.hour,
-             FlightList[i].time.minute);
+            printf("%02d:%02d\n",flights[i].time.hour,
+             flights[i].time.minute);
         }
     }
                 
     else{
         /*Makes a new Flight*/
-        tempflight = Scan_Flight_Info(tempflight);
-        make_flight(tempflight);
+        tempflight = scanFlightInfo(tempflight);
+        makeFlight(tempflight);
     }
     return;
 }
 
 /*Scans an airport id and prints the flights departing from that airport*/ 
-void command_p(){
-    int airport_i,airport_f,i,countedflights = 0;
-    char id[MaxID];
-    Flight temp[MaxFlights];
+void listFlightsDepart(){
+    int airportIndex,airportFlightNum,i,countedflights = 0;
+    char id[MAXID];
+    Flight temp[MAXFLIGHTS];
 
     scanf("%s",id);
 
-    airport_i = Search_Airport_by_ID(id);
+    airportIndex = searchAirport(id);
 
-    if( airport_i == -1 ){
+    if( airportIndex == NONEXISTENT ){
         printf(ERROR_NO_SUCH_AIRPORT_ID,id);
         return;
     }
 
-    airport_f = AirportList[airport_i].flights;
+    airportFlightNum = airports[airportIndex].airportFlights;
 
-    for (i=0; i < flight_n; i++){
+    for (i=0; i < numFlights; i++){
 
         /* If there are no flights left break */
-        if (countedflights == airport_f){
+        if (countedflights == airportFlightNum){
             break;
         }
 
-        if ( strcmp(FlightList[i].departid,id) == 0 ){
-            temp[countedflights] = FlightList[i];
+        if ( strcmp(flights[i].departId,id) == 0 ){
+            temp[countedflights] = flights[i];
             countedflights +=1;
         }
     }
-    sort_flights(temp,countedflights);
+
+    sortFlights(temp,countedflights);
+
     for(i=0; i < countedflights;i++){
-        Print_DepartFlight_info(temp,i);
+        printDepartFlight(temp,i);
     }
 }
 
 /* Scans an airport id and prints the flights departing from that airport */ 
-void command_c(){
-    int i,temp_i = 0;
-    char id[MaxID];
-    DestFlight temp[MaxFlights];
+void listFlightsArrival(){
+    int i,countedFlights = 0;
+    char id[MAXID];
+    DestFlight temp[MAXFLIGHTS];
 
     scanf("%s",id);
 
-    if (!Airport_exists(id)){
+    if (!existsAirport(id)){
         return;
     }
     
-    for (i=0; i < flight_n; i++){
-        if ( strcmp(FlightList[i].destid,id) == 0 ){
-            temp[temp_i] = Copy_destflight_struct(i);
-            temp_i +=1;
+    for (i=0; i < numFlights; i++){
+        if ( strcmp(flights[i].destid,id) == 0 ){
+            temp[countedFlights] = copyDestFlight(i);
+            countedFlights +=1;
         }
     }
 
-    sort_destflights(temp,temp_i);
-    for(i=0; i < temp_i;i++){
+    sortDestFlights(temp,countedFlights);
+    for(i=0; i < countedFlights;i++){
 
-        printf("%s %s ",temp[i].flightcode, temp[i].departid);
+        printf("%s %s ",temp[i].flightCode, temp[i].departId);
 
-        printf("%02d-%02d-%d ",temp[i].date.Day, temp[i].date.Month,
-        temp[i].date.Year);
+        printf("%02d-%02d-%d ",temp[i].date.day, temp[i].date.month,
+        temp[i].date.year);
 
         printf("%02d:%02d\n",temp[i].time.hour, temp[i].time.minute);
     }
@@ -1013,71 +1003,71 @@ void command_c(){
 
 
 /* Reads new date and updates existing one*/
-void command_t(){
+void changeDate(){
     int d;
     Date tempdate;
 
-    scanf("%d-%d-%d", &tempdate.Day, &tempdate.Month, &tempdate.Year);
+    scanf("%d-%d-%d", &tempdate.day, &tempdate.month, &tempdate.year);
 
-    if ( (d =Date_Distance(Today,tempdate)) <0 || d > DaysInYear){
+    if ( (d =dateDistance(today,tempdate)) <0 || d > DAYSINYEAR){
         printf(ERROR_INVALID_DATE);
         return;
     }
     
-    Today = tempdate;
-    printf("%02d-%02d-%d\n",Today.Day, Today.Month, Today.Year);
+    today = tempdate;
+    printf("%02d-%02d-%d\n",today.day, today.month, today.year);
     return;
 }
 
 
 
 
-void command_r(){
-    char buffer[MaxRCode], *rCode, FlightCode[MaxFLightCode];
+void addReservation(){
+    char buffer[MAXRCODE], *rCode, flightCode[MAXFLIGHTCODE];
     Date date;
     int passengers;
-    Res_List* list_res;
-    Res_Hash* hash_res;
+    ResList* resList;
+    ResHash* resHash;
     Flight* temp;
     int i;
 
-    scanf("%s %d-%d-%d", FlightCode, &date.Day, &date.Month, &date.Year);
+    scanf("%s %d-%d-%d", flightCode, &date.day, &date.month, &date.year);
     /*with args*/
     if (getchar() != '\n'){
         scanf("%s %d", buffer,&passengers);
         rCode = (char*)calloc((strlen(buffer)+1),sizeof(char));
-        check_mem(rCode);
+        checkMem(rCode);
         strcpy(rCode,buffer);
 
-        if ((i = verify_reservation(rCode,passengers,FlightCode,date)) == NonExistant){
+        if ((i = verifyRes(rCode,passengers,flightCode,date)) == NONEXISTENT){
             free(rCode);
             return;
         }
-        temp = &FlightList[i];
+        temp = &flights[i];
 
-        list_res = (Res_List*)calloc(1,sizeof(Res_List));
-        check_mem(list_res);
+        resList = (ResList*)calloc(1,sizeof(ResList));
+        checkMem(resList);
 
-        hash_res = (Res_Hash*)calloc(1,sizeof(Res_Hash));
-        check_mem(hash_res);
+        resHash = (ResHash*)calloc(1,sizeof(ResHash));
+        checkMem(resHash);
 
-        temp->reservation_n += passengers;
-        list_res->passengers = passengers;
-        list_res->rcode = rCode;
+        temp->resNum += passengers;
+        resList->passengers = passengers;
+        resList->rCode = rCode;
 
     
-        hash_res->res_in_list = Insert_Reservation(list_res, temp);
-        hash_res->flight = temp;
+        resHash->resInList = insertRes(resList, temp);
+        resHash->flight = temp;
 
-        hash_insert(hash_res);
+        hashInsert(resHash);
         
     }
     /*no args*/
     else{
-        if (( i = VerifyFlightCodeandDate(FlightCode,date)) == NonExistant){
+        if (( i = verifyDateFlight(flightCode,date)) == NONEXISTENT){
             return;
         }
-        Print_Reservations(i);
+        printReservations(i);
     }
 }
 
@@ -1086,21 +1076,21 @@ void command_r(){
 
 
 
-void command_e(){
-    char buffer[MaxRCode],*Code;
+void delReservationsFlights(){
+    char buffer[MAXRCODE],*Code;
     size_t len;
     scanf("%s",buffer);
     len = strlen(buffer);
     Code = (char*)calloc((len+1),sizeof(char));
-    check_mem(Code);
+    checkMem(Code);
     strcpy(Code,buffer);
 
-    if (len < MinRCode){
-        remove_flights(Code);
+    if (len < MINRCODE){
+        removeFlights(Code);
         free(Code);
     }
     else{
-        res_delete(Code,NonExistant);
+        resDelete(Code,NONEXISTENT);
         free(Code);
     }
 }
@@ -1108,23 +1098,23 @@ void command_e(){
 /*-------------------------------------------COMMANDSFUNCS-----------------*/
 
 
-void check_mem(void *ptr){
+void checkMem(void *ptr){
     if (ptr) return;
-    release_all_mem();
+    releaseAllMem();
     printf(ERROR_NO_MEMORY);
     exit(0);
 }
 
-void release_all_mem(){
-    free(AirportList);
-    remove_FlightList();
-    free(FlightList);
-    free(hash_table);
+void releaseAllMem(){
+    free(airports);
+    removeAllFlights();
+    free(flights);
+    free(hashRes);
     return;
 }
 
 
-unsigned int hash_func(char* key) {
+unsigned int hashFunc(char* key) {
     size_t i = 0, len = strlen(key);
     unsigned int hash = 0;
     while (i != len) {
@@ -1135,31 +1125,31 @@ unsigned int hash_func(char* key) {
     hash += hash << 3;
     hash ^= hash >> 11;
     hash += hash << 15;
-    return hash % TABLE_SIZE;
+    return hash % TABLESIZE;
 }
 
-void hash_insert(Res_Hash *res){
-    int i = hash_func(res->res_in_list->rcode);
-    res->next = hash_table[i];
-    hash_table[i] = res;
+void hashInsert(ResHash *res){
+    int i = hashFunc(res->resInList->rCode);
+    res->next = hashRes[i];
+    hashRes[i] = res;
 }
 
-Res_Hash *hash_search(char* rCode){
-    unsigned int i = hash_func(rCode);
-    Res_Hash *temp = hash_table[i];
-    while (temp && strcmp(temp->res_in_list->rcode,rCode) != 0){
+ResHash *hashSearch(char* rCode){
+    unsigned int i = hashFunc(rCode);
+    ResHash *temp = hashRes[i];
+    while (temp && strcmp(temp->resInList->rCode,rCode) != 0){
         temp = temp->next;
     }
     return temp;
 }
 
-void res_delete(char *rCode,int mode){
-    int i = hash_func(rCode);
-    Res_Hash *temp = hash_table[i];
-    Res_Hash *prev = NULL;
+void resDelete(char *rCode,int mode){
+    int i = hashFunc(rCode);
+    ResHash *temp = hashRes[i];
+    ResHash *prev = NULL;
 
 
-    while (temp && strcmp(temp->res_in_list->rcode,rCode) != 0){
+    while (temp && strcmp(temp->resInList->rCode,rCode) != 0){
         prev = temp;
         temp = temp->next;
     }
@@ -1170,21 +1160,21 @@ void res_delete(char *rCode,int mode){
     }
 
     if (!prev){
-        hash_table[i] = temp->next;
+        hashRes[i] = temp->next;
     }
 
     else{
         prev->next = temp->next;
     }
 
-    if (mode != NonExistant){
-        temp->flight = &FlightList[mode];
+    if (mode != NONEXISTENT){
+        temp->flight = &flights[mode];
     }
-    remove_res_list(temp->res_in_list,temp->flight);
+    removeResInList(temp->resInList,temp->flight);
     free(temp);
 }
 
-void remove_res_list(Res_List* res, Flight* flight){
+void removeResInList(ResList* res, Flight* flight){
     if (!res->prev && !res->next){
         flight->reservation = NULL;
     }
@@ -1203,21 +1193,21 @@ void remove_res_list(Res_List* res, Flight* flight){
         res->next->prev = res->prev;
     }
     
-    remove_res(res,flight);
+    removeRes(res,flight);
 }
 
-void remove_flights(char* Code){
-    int i,j,found = False;
+void removeFlights(char* Code){
+    int i,j,found = FALSE;
 
-    for (i=0; i < flight_n; i++){
-        if (strcmp(FlightList[i].flightcode,Code) == 0){
+    for (i=0; i < numFlights; i++){
+        if (strcmp(flights[i].flightCode,Code) == 0){
 
-            found = True;
-            remove_reservations(i);
-            flight_n -= 1;
+            found = TRUE;
+            removeReservations(i);
+            numFlights -= 1;
 
-            for (j=i; j < flight_n; j++){
-                FlightList[j] = FlightList[j+1];
+            for (j=i; j < numFlights; j++){
+                flights[j] = flights[j+1];
             }
             i -=1;
         }
@@ -1231,25 +1221,25 @@ void remove_flights(char* Code){
 }
 
 
-void remove_FlightList(){
+void removeAllFlights(){
     int i;
-    for (i=0; i<flight_n; i++)
-        remove_reservations(i);   
+    for (i=0; i<numFlights; i++)
+        removeReservations(i);   
 }
 
-void remove_reservations(int i){
-    Res_List *temp;
+void removeReservations(int i){
+    ResList *temp;
 
-    while (FlightList[i].reservation){
-        temp = FlightList[i].reservation;
-        FlightList[i].reservation = temp->next;
-        res_delete(temp->rcode,i);
+    while (flights[i].reservation){
+        temp = flights[i].reservation;
+        flights[i].reservation = temp->next;
+        resDelete(temp->rCode,i);
     }
 }
 
 
-void remove_res(Res_List *res,Flight* flight){
-    flight->reservation_n -= res->passengers;
-    free(res->rcode);
+void removeRes(ResList *res,Flight* flight){
+    flight->resNum -= res->passengers;
+    free(res->rCode);
     free(res);
 }
